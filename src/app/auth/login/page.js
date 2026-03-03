@@ -2,11 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Cookies from "js-cookie";
 import { login } from "../../../../services/auth";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-
-
 
 const initialValues = {
   email: "",
@@ -14,6 +14,7 @@ const initialValues = {
 };
 
 export default function LoginPage() {
+  const router = useRouter();
   const [formValues, setFormValues] = useState(initialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState({ success: "", error: "" });
@@ -30,8 +31,26 @@ export default function LoginPage() {
     setFeedback({ success: "", error: "" });
 
     try {
-      await login(formValues);
-      setFeedback({ success: "Login successful.", error: "" });
+      const data = await login(formValues);
+
+      if (data?.access_token) {
+        Cookies.set("access_token", data.access_token);
+      }
+      if (data?.refresh_token) {
+        Cookies.set("refresh_token", data.refresh_token);
+      }
+
+      if (data?.role === "admin") {
+        router.push("/admin");
+      } else if (data?.role === "doctor") {
+        router.push("/doctor");
+      } else if (data?.role === "patient") {
+        router.push("/patient");
+      } else {
+        router.push("/patient");
+      }
+
+      setFeedback({ success: data?.message || "Login successful.", error: "" });
     } catch (error) {
       setFeedback({
         success: "",
