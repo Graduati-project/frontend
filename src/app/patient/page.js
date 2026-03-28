@@ -1,69 +1,44 @@
 "use client";
 
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { useProfile } from "../../../hooks/use-user";
+import { PatientMobileTabs } from "./patient-nav";
+import { PatientMainContent } from "./patient-content";
 
-export default function PatientPage() {
-  const { data, isLoading, error } = useProfile();
+function PatientPageInner() {
+  const searchParams = useSearchParams();
+  const section = searchParams.get("section") || "profile";
+  const { data: profileData } = useProfile();
+  const user = profileData?.data;
 
-  const user = data?.data; 
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-sm text-slate-500">Loading your data...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-sm text-rose-600">
-          Failed to load profile. Please try again.
-        </p>
-      </div>
-    );
-  }
+  const displayName = user
+    ? `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || user.email
+    : null;
 
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-semibold text-slate-900">
-        Welcome,{" "}
-        {user
-          ? `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || user.email
-          : "Patient"}
+        Welcome, {displayName ?? "…"}
       </h1>
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-slate-900">
-          Your Information
-        </h2>
-        <dl className="mt-4 space-y-3 text-sm text-slate-700">
-          <div className="flex items-center justify-between">
-            <dt className="text-slate-500">Name</dt>
-            <dd className="font-medium">
-              {user
-                ? `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() ||
-                  user.email
-                : "-"}
-            </dd>
-          </div>
-          <div className="flex items-center justify-between">
-            <dt className="text-slate-500">Email</dt>
-            <dd className="font-medium">{user?.email || "-"}</dd>
-          </div>
-          <div className="flex items-center justify-between">
-            <dt className="text-slate-500">Phone</dt>
-            <dd className="font-medium">{user?.phone || "-"}</dd>
-          </div>
-          <div className="flex items-center justify-between">
-            <dt className="text-slate-500">Role</dt>
-            <dd className="font-medium capitalize">
-              {user?.role || "patient"}
-            </dd>
-          </div>
-        </dl>
-      </div>
+      <PatientMobileTabs />
+
+      <PatientMainContent section={section} />
     </div>
+  );
+}
+
+export default function PatientPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-[40vh] items-center justify-center">
+          <p className="text-sm text-slate-500">Loading…</p>
+        </div>
+      }
+    >
+      <PatientPageInner />
+    </Suspense>
   );
 }

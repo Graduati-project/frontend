@@ -20,13 +20,12 @@ export function useLogin() {
   return useMutation({
     mutationFn: login,
     onSuccess: (data) => {
-      if (data?.data?.credentials&&data?.data?.user.role==="admin") {
-        const { access_token, refresh_token } = data.data.credentials;
-
-        // store tokens in cookies
-        Cookies.set("access_token", access_token);
-
-        Cookies.set("refresh_token", refresh_token);
+      const creds = data?.data?.credentials;
+      if (creds?.access_token) {
+        Cookies.set("access_token", creds.access_token);
+        if (creds.refresh_token) {
+          Cookies.set("refresh_token", creds.refresh_token);
+        }
       }
     },
   });
