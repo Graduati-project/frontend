@@ -18,8 +18,8 @@ export default function AdminLayout({ children }) {
             />
           </div>
           <div>
-            <p className="text-sm font-semibold text-slate-900">Admin Panel</p>
-            <p className="text-xs text-slate-500">Manage the system</p>
+            <p className="text-sm font-semibold text-slate-900">Staff Panel</p>
+            <p className="text-xs text-slate-500">Manage hospital data</p>
           </div>
         </div>
 

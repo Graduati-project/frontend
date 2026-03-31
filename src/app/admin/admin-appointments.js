@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import { useGetStaffAppointments } from "../../../hooks/use-staff";
 import {
   getUserDisplayName,
@@ -77,6 +78,41 @@ function AppointmentRow({ appointment }) {
 export function AdminAppointmentsSection() {
   const query = useGetStaffAppointments();
   const { appointments } = parseAdminAppointmentsResponse(query.data);
+  const [search, setSearch] = useState("");
+
+  const searchedAppointments = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return appointments;
+    return appointments.filter((appointment) => {
+      const doctor = appointment?.doctorId;
+      const patient = appointment?.patientId;
+
+      const doctorUser =
+        doctor && typeof doctor === "object"
+          ? doctor.userId && typeof doctor.userId === "object"
+            ? doctor.userId
+            : doctor
+          : null;
+
+      const patientUser =
+        patient && typeof patient === "object"
+          ? patient.userId && typeof patient.userId === "object"
+            ? patient.userId
+            : patient
+          : null;
+
+      const dn = doctorUser ? getUserDisplayName(doctorUser) : "";
+      const de = doctorUser?.email ?? "";
+      const dp = doctorUser?.phone ?? "";
+
+      const pn = patientUser ? getUserDisplayName(patientUser) : "";
+      const pe = patientUser?.email ?? "";
+      const pp = patientUser?.phone ?? "";
+
+      const hay = `${dn} ${de} ${dp} ${pn} ${pe} ${pp}`.toLowerCase();
+      return hay.includes(q);
+    });
+  }, [appointments, search]);
 
   return (
     <SectionState isLoading={query.isLoading} error={query.error}>
@@ -88,7 +124,23 @@ export function AdminAppointmentsSection() {
           </p>
         </div>
 
-        {appointments.length === 0 ? (
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div className="flex min-w-[260px] flex-col gap-1">
+            <label className="text-xs font-semibold text-slate-600">Search</label>
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search by name, email, phone"
+              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900"
+            />
+          </div>
+          <p className="text-xs text-slate-500">
+            Showing <span className="font-semibold text-slate-700">{searchedAppointments.length}</span>{" "}
+            of <span className="font-semibold text-slate-700">{appointments.length}</span>
+          </p>
+        </div>
+
+        {searchedAppointments.length === 0 ? (
           <p className="text-center text-sm text-slate-500">
             No appointments found.
           </p>
@@ -105,7 +157,7 @@ export function AdminAppointmentsSection() {
                 </tr>
               </thead>
               <tbody>
-                {appointments.map((a) => (
+                {searchedAppointments.map((a) => (
                   <AppointmentRow
                     key={a._id ?? JSON.stringify(a)}
                     appointment={a}

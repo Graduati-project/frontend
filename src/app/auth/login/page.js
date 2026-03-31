@@ -40,7 +40,7 @@ export default function LoginPage() {
         Cookies.set("refresh_token", data.refresh_token);
       }
 
-      if (data?.role === "admin") {
+      if (data?.role === "staff") {
         router.push("/admin");
       } else if (data?.role === "doctor") {
         router.push("/doctor");

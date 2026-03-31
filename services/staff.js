@@ -26,8 +26,17 @@ export async function addStaffDoctor(data) {
   return response.data;
 }
 
+export async function addStaffPatient(data) {
+  const response = await api.post("/staff/staff", data, { withAuth: true });
+  return response.data;
+}
+
 export async function addStaffUser(data) {
   const response = await api.post("/staff/staff", data, { withAuth: true });
   return response.data;
 }
 
+export async function getStaffSpecialties() {
+  const response = await api.get("/staff/specialties", { withAuth: true });
+  return response.data;
+}
