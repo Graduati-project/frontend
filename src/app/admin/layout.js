@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
+import { AdminSidebarNav } from "./admin-nav";
 
 export default function AdminLayout({ children }) {
   return (
@@ -21,26 +23,17 @@ export default function AdminLayout({ children }) {
           </div>
         </div>
 
-        <nav className="mt-8 space-y-1 text-sm font-medium text-slate-600">
-          <Link
-            href="/admin"
-            className="flex items-center justify-between rounded-xl px-3 py-2 bg-slate-900 text-slate-50"
-          >
-            <span>Overview</span>
-          </Link>
-          <button
-            type="button"
-            className="w-full rounded-xl px-3 py-2 text-left text-slate-500 hover:bg-slate-100"
-          >
-            Users
-          </button>
-          <button
-            type="button"
-            className="w-full rounded-xl px-3 py-2 text-left text-slate-500 hover:bg-slate-100"
-          >
-            Settings
-          </button>
-        </nav>
+        <Suspense
+          fallback={
+            <div className="mt-8 space-y-2">
+              <div className="h-10 animate-pulse rounded-xl bg-slate-100" />
+              <div className="h-10 animate-pulse rounded-xl bg-slate-100" />
+              <div className="h-10 animate-pulse rounded-xl bg-slate-100" />
+            </div>
+          }
+        >
+          <AdminSidebarNav />
+        </Suspense>
 
         <div className="mt-auto pt-6">
           <Link
@@ -53,9 +46,7 @@ export default function AdminLayout({ children }) {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 px-4 py-6 md:px-8 md:py-8">
-        {children}
-      </main>
+      <main className="min-w-0 flex-1 px-4 py-6 md:px-8 md:py-8">{children}</main>
     </div>
   );
 }

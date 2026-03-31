@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "patient ",
-  description: "patient-management-system",
+  title: "Hospital Management System",
+  description: "Hospital patient-management system",
   icons: {
     icon: "/logo.jpg",
     shortcut: "/logo.jpg",

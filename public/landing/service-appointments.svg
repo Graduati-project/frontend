@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="800" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E6FFFB"/>
+      <stop offset="1" stop-color="#ECFEFF"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="260" y1="210" x2="940" y2="590" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0D9488"/>
+      <stop offset="1" stop-color="#06B6D4"/>
+    </linearGradient>
+    <filter id="shadow" x="-50" y="-50" width="1300" height="900" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#0F172A" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="800" rx="48" fill="url(#bg)"/>
+
+  <!-- Top bar -->
+  <g filter="url(#shadow)">
+    <rect x="140" y="120" width="920" height="560" rx="40" fill="white"/>
+    <rect x="140" y="120" width="920" height="88" rx="40" fill="#0F172A"/>
+    <circle cx="190" cy="164" r="10" fill="#22C55E"/>
+    <circle cx="222" cy="164" r="10" fill="#F59E0B"/>
+    <circle cx="254" cy="164" r="10" fill="#EF4444"/>
+    <rect x="310" y="150" width="320" height="28" rx="14" fill="rgba(255,255,255,0.14)"/>
+  </g>
+
+  <!-- Calendar + clock -->
+  <g>
+    <rect x="220" y="260" width="520" height="340" rx="28" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="2"/>
+    <rect x="220" y="260" width="520" height="72" rx="28" fill="url(#accent)" opacity="0.18"/>
+    <rect x="260" y="284" width="140" height="24" rx="12" fill="#0D9488" opacity="0.22"/>
+    <rect x="418" y="284" width="120" height="24" rx="12" fill="#06B6D4" opacity="0.22"/>
+
+    <!-- Calendar grid -->
+    <g opacity="0.9">
+      <rect x="260" y="360" width="90" height="68" rx="16" fill="white" stroke="#E2E8F0" stroke-width="2"/>
+      <rect x="368" y="360" width="90" height="68" rx="16" fill="white" stroke="#E2E8F0" stroke-width="2"/>
+      <rect x="476" y="360" width="90" height="68" rx="16" fill="#0D9488" opacity="0.10" stroke="#0D9488" stroke-width="2"/>
+      <rect x="584" y="360" width="90" height="68" rx="16" fill="white" stroke="#E2E8F0" stroke-width="2"/>
+
+      <rect x="260" y="444" width="90" height="68" rx="16" fill="white" stroke="#E2E8F0" stroke-width="2"/>
+      <rect x="368" y="444" width="90" height="68" rx="16" fill="#06B6D4" opacity="0.10" stroke="#06B6D4" stroke-width="2"/>
+      <rect x="476" y="444" width="90" height="68" rx="16" fill="white" stroke="#E2E8F0" stroke-width="2"/>
+      <rect x="584" y="444" width="90" height="68" rx="16" fill="white" stroke="#E2E8F0" stroke-width="2"/>
+    </g>
+  </g>
+
+  <g>
+    <circle cx="858" cy="430" r="140" fill="white" stroke="#E2E8F0" stroke-width="2"/>
+    <circle cx="858" cy="430" r="122" fill="url(#accent)" opacity="0.10"/>
+    <path d="M858 340V430L925 466" stroke="#0F172A" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+    <circle cx="858" cy="430" r="14" fill="#0F172A" opacity="0.85"/>
+    <path d="M812 620c38 20 82 30 129 30 64 0 123-19 172-52" stroke="#0D9488" stroke-width="10" stroke-linecap="round" opacity="0.35"/>
+  </g>
+
+  <!-- Badge -->
+  <g>
+    <rect x="700" y="268" width="320" height="72" rx="24" fill="#0F172A"/>
+    <path d="M742 304h20v20h-20z" fill="#22C55E" opacity="0.9"/>
+    <rect x="776" y="296" width="214" height="12" rx="6" fill="rgba(255,255,255,0.70)"/>
+    <rect x="776" y="314" width="152" height="10" rx="5" fill="rgba(255,255,255,0.36)"/>
+  </g>
+</svg>
+
