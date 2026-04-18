@@ -9,6 +9,9 @@ import {
   getStaffDoctors,
   getStaffPatientById,
   getStaffPatients,
+  getStaffPressureReports,
+  getStaffReviews,
+  getStaffMedicalFiles,
   getStaffSpecialties,
 } from "../services/staff";
 
@@ -75,5 +78,32 @@ export function useGetStaffSpecialties() {
   return useQuery({
     queryKey: ["staff-specialties"],
     queryFn: () => getStaffSpecialties(),
+  });
+}
+
+export function useGetStaffPressureReports() {
+  return useQuery({
+    queryKey: ["staff-reports-pressure"],
+    queryFn: () => getStaffPressureReports(),
+  });
+}
+
+const STAFF_TABLE_PAGE_SIZE = 8;
+
+export function useGetStaffReviews(page = 1, limit = STAFF_TABLE_PAGE_SIZE) {
+  return useQuery({
+    queryKey: ["staff-reviews", page, limit],
+    queryFn: () => getStaffReviews({ page, limit }),
+  });
+}
+
+export function useGetStaffMedicalFiles(
+  page = 1,
+  limit = STAFF_TABLE_PAGE_SIZE,
+  extraParams = {}
+) {
+  return useQuery({
+    queryKey: ["staff-medical-files", page, limit, extraParams.patientId ?? null],
+    queryFn: () => getStaffMedicalFiles({ page, limit, ...extraParams }),
   });
 }

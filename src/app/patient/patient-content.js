@@ -3,11 +3,13 @@
 import { useProfile } from "../../../hooks/use-user";
 import { AppointmentsSection } from "./patient-appointments";
 import { DoctorsSection } from "./patient-doctors";
+import { PatientMedicalRecordsSection } from "./patient-medical-records-section";
+import { PatientReviewsSection } from "./patient-reviews-section";
 import { SpecialtiesSection } from "./patient-specialties";
 
 function ProfileView({ user }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div className="portal-card p-6 sm:p-7">
       <h2 className="text-lg font-semibold text-slate-900">Your information</h2>
       <dl className="mt-6 space-y-4 text-sm">
         <div className="flex flex-col gap-1 border-b border-slate-100 pb-4 sm:flex-row sm:justify-between">
@@ -60,6 +62,14 @@ export function PatientMainContent({ section }) {
 
   if (section === "appointments") {
     return <AppointmentsSection />;
+  }
+
+  if (section === "reviews") {
+    return <PatientReviewsSection />;
+  }
+
+  if (section === "records") {
+    return <PatientMedicalRecordsSection />;
   }
 
   if (section === "doctors") {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { formatPersonDisplayName } from "../../../lib/utils";
 import { useCancelAppointment, useGetAppointments } from "../../../hooks/use-patient";
 import { parseAppointmentsResponse } from "./patient-parsers";
 
@@ -8,6 +9,7 @@ const STATUS_FILTERS = [
   { value: "all", label: "All" },
   { value: "confirmed", label: "Confirmed" },
   { value: "pending", label: "Pending" },
+  { value: "completed", label: "Completed" },
   { value: "cancelled", label: "Cancelled" },
 ];
 
@@ -42,10 +44,15 @@ function SectionState({ isLoading, error, children }) {
 
 function statusBadgeClass(status) {
   const s = (status ?? "").toLowerCase();
-  if (s === "confirmed") return "bg-emerald-100 text-emerald-800";
-  if (s === "pending") return "bg-amber-100 text-amber-800";
-  if (s === "cancelled" || s === "canceled") return "bg-rose-100 text-rose-800";
-  return "bg-slate-100 text-slate-700";
+  if (s === "confirmed")
+    return "bg-emerald-50 text-emerald-800 ring-1 ring-emerald-200/80";
+  if (s === "pending")
+    return "bg-amber-50 text-amber-800 ring-1 ring-amber-200/80";
+  if (s === "cancelled" || s === "canceled")
+    return "bg-rose-50 text-rose-800 ring-1 ring-rose-200/80";
+  if (s === "completed")
+    return "bg-teal-50 text-teal-800 ring-1 ring-teal-200/80";
+  return "bg-slate-100 text-slate-700 ring-1 ring-slate-200/80";
 }
 
 function canCancelAppointment(status) {
@@ -78,91 +85,135 @@ export function AppointmentCard({ appointment }) {
     });
   };
 
+  const dayNum = validDate
+    ? dateObj.toLocaleDateString("en-US", { day: "numeric" })
+    : "—";
+  const monthShort = validDate
+    ? dateObj.toLocaleDateString("en-US", { month: "short" })
+    : "";
+  const yearNum = validDate
+    ? dateObj.toLocaleDateString("en-US", { year: "numeric" })
+    : "";
+  const weekdayShort = validDate
+    ? dateObj.toLocaleDateString("en-US", { weekday: "short" })
+    : "";
+  const timeStr = validDate
+    ? dateObj.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+      })
+    : "";
+
+  const doctorName =
+    user && typeof user === "object"
+      ? formatPersonDisplayName(user.firstName, user.lastName) || "—"
+      : null;
+
   return (
-    <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-100 bg-slate-50/80 px-5 py-4">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-            Date & time
-          </p>
-          {validDate ? (
-            <>
-              <p className="mt-1 text-lg font-semibold text-slate-900">
-                {dateObj.toLocaleDateString("en-US", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </p>
-              <p className="text-sm text-slate-600">
-                {dateObj.toLocaleTimeString("en-US", {
-                  hour: "numeric",
-                  minute: "2-digit",
-                })}
-              </p>
-            </>
-          ) : (
-            <p className="mt-1 text-sm text-slate-500">—</p>
+    <article className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-sm ring-1 ring-slate-100/70 transition-shadow hover:shadow-md">
+      <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-stretch sm:gap-0 sm:p-0">
+        <div className="flex shrink-0 flex-row gap-3 sm:flex-col sm:items-center sm:justify-center sm:gap-1 sm:px-4 sm:py-4 sm:text-center">
+          <div className="flex h-18 w-18 shrink-0 flex-col items-center justify-center rounded-2xl bg-teal-50 ring-1 ring-teal-100/90 sm:h-auto sm:min-h-22 sm:w-24 sm:rounded-xl">
+            {validDate ? (
+              <>
+                <span className="text-2xl font-bold tabular-nums text-teal-900 sm:text-3xl">
+                  {dayNum}
+                </span>
+                <span className="text-xs font-semibold uppercase tracking-wide text-teal-700/90">
+                  {monthShort} {yearNum}
+                </span>
+              </>
+            ) : (
+              <span className="text-sm font-medium text-slate-400">No date</span>
+            )}
+          </div>
+          <div className="min-w-0 flex-1 sm:hidden">
+            {appointment.status && (
+              <span
+                className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold capitalize ${statusBadgeClass(appointment.status)}`}
+              >
+                {appointment.status}
+              </span>
+            )}
+          </div>
+        </div>
+
+        <div className="min-w-0 flex-1 border-slate-100 sm:border-l sm:px-5 sm:py-4">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div className="min-w-0">
+              {validDate && (
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                  {weekdayShort} · {timeStr}
+                </p>
+              )}
+              {user && typeof user === "object" ? (
+                <>
+                  <h3 className="mt-1 text-lg font-semibold tracking-tight text-slate-900">
+                    {doctorName}
+                  </h3>
+                  {specialty?.name && (
+                    <p className="mt-0.5 text-sm font-medium text-teal-700">
+                      {specialty.name}
+                    </p>
+                  )}
+                  <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-slate-600">
+                    <span className="inline-flex max-w-full items-center gap-1.5">
+                      <span
+                        className="shrink-0 text-slate-400"
+                        aria-hidden
+                      >
+                        ✉
+                      </span>
+                      <span className="truncate font-medium text-slate-700">
+                        {user.email}
+                      </span>
+                    </span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <span
+                        className="shrink-0 text-slate-400"
+                        aria-hidden
+                      >
+                        ☎
+                      </span>
+                      <span className="font-medium text-slate-700">
+                        {user.phone ?? "—"}
+                      </span>
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <p className="mt-2 text-sm text-slate-500">
+                  Doctor details are not available for this appointment.
+                </p>
+              )}
+            </div>
+            <div className="hidden shrink-0 sm:block">
+              {appointment.status && (
+                <span
+                  className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${statusBadgeClass(appointment.status)}`}
+                >
+                  {appointment.status}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {showCancel && appointment._id && (
+            <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-4 sm:mt-4 sm:border-0 sm:pt-0">
+              <button
+                type="button"
+                onClick={() => {
+                  cancelMutation.reset();
+                  setDialogOpen(true);
+                }}
+                className="inline-flex items-center justify-center rounded-xl border border-rose-200 bg-rose-50 px-3 py-1.5 text-sm font-semibold text-rose-800 transition hover:bg-rose-100"
+              >
+                Cancel appointment
+              </button>
+            </div>
           )}
         </div>
-        {appointment.status && (
-          <span
-            className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${statusBadgeClass(appointment.status)}`}
-          >
-            {appointment.status}
-          </span>
-        )}
       </div>
-
-      <div className="px-5 py-4">
-        <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-          Doctor
-        </p>
-        {user && typeof user === "object" ? (
-          <>
-            <h3 className="mt-1 text-lg font-semibold text-slate-900">
-              {user.firstName} {user.lastName}
-            </h3>
-            {specialty?.name && (
-              <p className="mt-0.5 text-sm font-medium text-emerald-700">
-                {specialty.name}
-              </p>
-            )}
-            <dl className="mt-4 space-y-2 text-sm">
-              <div className="flex justify-between gap-4">
-                <dt className="text-slate-500">Email</dt>
-                <dd className="font-medium text-slate-900">{user.email}</dd>
-              </div>
-              <div className="flex justify-between gap-4">
-                <dt className="text-slate-500">Phone</dt>
-                <dd className="font-medium text-slate-900">
-                  {user.phone ?? "—"}
-                </dd>
-              </div>
-            </dl>
-          </>
-        ) : (
-          <p className="mt-2 text-sm text-slate-500">
-            Doctor details are not available for this appointment.
-          </p>
-        )}
-      </div>
-
-      {showCancel && appointment._id && (
-        <div className="border-t border-slate-100 px-5 py-4">
-          <button
-            type="button"
-            onClick={() => {
-              cancelMutation.reset();
-              setDialogOpen(true);
-            }}
-            className="text-sm font-semibold text-rose-700 underline decoration-rose-300 underline-offset-2 hover:text-rose-900"
-          >
-            Cancel booking
-          </button>
-        </div>
-      )}
 
       {dialogOpen && (
         <div
@@ -179,7 +230,7 @@ export function AppointmentCard({ appointment }) {
             role="dialog"
             aria-modal="true"
             aria-labelledby="cancel-appointment-title"
-            className="relative z-10 w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-xl"
+            className="relative z-10 w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-xl ring-1 ring-slate-100/80"
           >
             <h3
               id="cancel-appointment-title"
@@ -233,42 +284,55 @@ export function AppointmentsSection() {
     [apptList, statusFilter]
   );
 
+  const sortedList = useMemo(() => {
+    return [...filteredList].sort((a, b) => {
+      const ta = a.date ? new Date(a.date).getTime() : 0;
+      const tb = b.date ? new Date(b.date).getTime() : 0;
+      return tb - ta;
+    });
+  }, [filteredList]);
+
   return (
-    <SectionState
-      isLoading={appointments.isLoading}
-      error={appointments.error}
-    >
-      <div className="space-y-4">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="space-y-5">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+        <div>
           <h2 className="text-lg font-semibold text-slate-900">
             Your appointments
           </h2>
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-medium uppercase tracking-wide text-slate-400">
-              Status
-            </span>
-            <div className="flex flex-wrap gap-1.5 rounded-xl border border-slate-200 bg-slate-50/80 p-1">
-              {STATUS_FILTERS.map(({ value, label }) => {
-                const active = statusFilter === value;
-                return (
-                  <button
-                    key={value}
-                    type="button"
-                    onClick={() => setStatusFilter(value)}
-                    className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
-                      active
-                        ? "bg-slate-900 text-white"
-                        : "text-slate-600 hover:bg-white"
-                    }`}
-                  >
-                    {label}
-                  </button>
-                );
-              })}
-            </div>
+          <p className="mt-1 text-sm text-slate-600">
+            Upcoming and past visits in one place. Newest first.
+          </p>
+        </div>
+        <div className="flex flex-col gap-2 sm:items-end">
+          <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+            Filter by status
+          </span>
+          <div className="flex max-w-full flex-wrap gap-1.5 rounded-2xl border border-teal-100/80 bg-teal-50/30 p-1 ring-1 ring-slate-100/60">
+            {STATUS_FILTERS.map(({ value, label }) => {
+              const active = statusFilter === value;
+              return (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => setStatusFilter(value)}
+                  className={`rounded-xl px-3 py-1.5 text-sm font-medium transition-colors ${
+                    active
+                      ? "bg-teal-600 text-white shadow-sm shadow-teal-600/20"
+                      : "text-slate-600 hover:bg-white/90"
+                  }`}
+                >
+                  {label}
+                </button>
+              );
+            })}
           </div>
         </div>
+      </div>
 
+      <SectionState
+        isLoading={appointments.isLoading}
+        error={appointments.error}
+      >
         {apptList.length === 0 ? (
           <p className="text-center text-sm text-slate-500">
             No appointments yet.
@@ -278,13 +342,15 @@ export function AppointmentsSection() {
             No appointments with this status.
           </p>
         ) : (
-          <div className="grid gap-4">
-            {filteredList.map((item) => (
-              <AppointmentCard key={item._id} appointment={item} />
+          <ul className="space-y-3">
+            {sortedList.map((item) => (
+              <li key={item._id}>
+                <AppointmentCard appointment={item} />
+              </li>
             ))}
-          </div>
+          </ul>
         )}
-      </div>
-    </SectionState>
+      </SectionState>
+    </div>
   );
 }

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAddAppointment, useGetMyDoctors } from "../../../hooks/use-patient";
 import { parseMyDoctorsResponse } from "./patient-parsers";
-import { DAY_LABEL_EN, ScheduleTable } from "./patient-schedule";
+import { DAY_LABEL_EN, ScheduleVisual } from "./patient-schedule";
 
 function SectionState({ isLoading, error, children }) {
   if (isLoading) {
@@ -72,7 +72,7 @@ export function DoctorBookForm({ doctorId, schedule }) {
   if (!doctorId) return null;
 
   return (
-    <div className="border-t border-slate-100 bg-slate-50/50 px-5 py-4">
+    <div className="border-t border-teal-100/60 bg-teal-50/20 px-5 py-4">
       {!open ? (
         <button
           type="button"
@@ -80,9 +80,9 @@ export function DoctorBookForm({ doctorId, schedule }) {
             mutation.reset();
             setOpen(true);
           }}
-          className="w-full rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
+          className="w-full rounded-xl bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-teal-600/20 transition hover:bg-teal-500"
         >
-          Book
+          Book appointment
         </button>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-3">
@@ -161,7 +161,7 @@ export function DoctorBookForm({ doctorId, schedule }) {
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="min-w-[100px] flex-1 rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+              className="min-w-[100px] flex-1 rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-teal-600/15 transition hover:bg-teal-500 disabled:opacity-50"
             >
               {mutation.isPending ? "Booking…" : "Confirm"}
             </button>
@@ -171,7 +171,7 @@ export function DoctorBookForm({ doctorId, schedule }) {
                 setOpen(false);
                 mutation.reset();
               }}
-              className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700"
+              className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
             >
               Cancel
             </button>
@@ -187,9 +187,13 @@ export function MyDoctorCard({ doctor, showBooking = false }) {
   const spec = doctor.specialtyId;
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-      <div className="border-b border-slate-100 bg-slate-50/80 px-5 py-4">
-        <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+    <article className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-sm ring-1 ring-slate-100/70 transition-shadow hover:shadow-md">
+      <div className="relative border-b border-teal-100/70 bg-teal-50/35 px-5 py-4">
+        <div
+          className="pointer-events-none absolute left-0 top-0 h-full w-1 bg-teal-500/90"
+          aria-hidden
+        />
+        <p className="text-xs font-semibold uppercase tracking-wide text-teal-800/80">
           Doctor
         </p>
         {!user || typeof user !== "object" ? (
@@ -198,19 +202,29 @@ export function MyDoctorCard({ doctor, showBooking = false }) {
           </p>
         ) : (
           <>
-            <h3 className="mt-1 text-lg font-semibold text-slate-900">
+            <h3 className="mt-1 text-xl font-semibold tracking-tight text-slate-900">
               {user.firstName} {user.lastName}
             </h3>
             <dl className="mt-4 space-y-2 text-sm">
-              <div className="flex justify-between gap-4">
-                <dt className="text-slate-500">Email</dt>
-                <dd className="font-medium text-slate-900">{user.email}</dd>
+              <div className="rounded-xl bg-white/80 px-3 py-2.5 ring-1 ring-teal-100/60">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-teal-700/90">
+                    Email
+                  </dt>
+                  <dd className="max-w-full break-all text-right font-medium text-slate-900">
+                    {user.email}
+                  </dd>
+                </div>
               </div>
-              <div className="flex justify-between gap-4">
-                <dt className="text-slate-500">Phone</dt>
-                <dd className="font-medium text-slate-900">
-                  {user.phone ?? "—"}
-                </dd>
+              <div className="rounded-xl bg-white/80 px-3 py-2.5 ring-1 ring-teal-100/60">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-teal-700/90">
+                    Phone
+                  </dt>
+                  <dd className="text-right font-medium text-slate-900">
+                    {user.phone ?? "—"}
+                  </dd>
+                </div>
               </div>
             </dl>
           </>
@@ -219,24 +233,28 @@ export function MyDoctorCard({ doctor, showBooking = false }) {
 
       {spec && typeof spec === "object" && (
         <div className="px-5 py-4">
-          <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-            Specialty
-          </p>
-          <h4 className="mt-1 text-lg font-semibold text-slate-900">
-            {spec.name}
-          </h4>
-          {spec.maxAppointmentsPerDay != null && (
-            <p className="mt-1 text-sm text-slate-600">
-              Max appointments per day:{" "}
-              <span className="font-medium text-slate-900">
-                {spec.maxAppointmentsPerDay}
-              </span>
+          <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-4 ring-1 ring-slate-100/80">
+            <p className="text-xs font-semibold uppercase tracking-wide text-teal-800/80">
+              Specialty
             </p>
-          )}
-          <p className="mb-3 mt-4 text-xs font-medium uppercase tracking-wide text-slate-400">
-            Working hours
-          </p>
-          <ScheduleTable schedule={spec.schedule} />
+            <h4 className="mt-1 text-lg font-semibold text-slate-900">
+              {spec.name}
+            </h4>
+            {spec.maxAppointmentsPerDay != null && (
+              <p className="mt-2 flex flex-wrap items-center gap-2 text-sm text-slate-600">
+                <span className="inline-flex items-center rounded-full bg-white px-2.5 py-0.5 text-xs font-medium text-slate-700 ring-1 ring-slate-200/80">
+                  Max / day:{" "}
+                  <span className="ml-1 font-semibold text-teal-800">
+                    {spec.maxAppointmentsPerDay}
+                  </span>
+                </span>
+              </p>
+            )}
+            <p className="mb-2 mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">
+              Weekly hours
+            </p>
+            <ScheduleVisual schedule={spec.schedule} compact />
+          </div>
         </div>
       )}
 

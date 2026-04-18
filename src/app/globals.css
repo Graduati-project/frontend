@@ -6,8 +6,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-app), ui-monospace, monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -118,7 +118,57 @@
   }
   body {
     @apply bg-background text-foreground;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
   }
+}
+
+/* Portal & marketing: soft healthcare mesh */
+.portal-shell {
+  background:
+    radial-gradient(1200px 600px at 100% -10%, rgb(204 251 241 / 0.45), transparent 55%),
+    radial-gradient(900px 500px at -10% 110%, rgb(224 242 254 / 0.5), transparent 50%),
+    linear-gradient(180deg, rgb(248 250 252) 0%, rgb(241 245 249) 100%);
+}
+
+.portal-sidebar {
+  @apply border-r border-teal-100/70 bg-white/85 shadow-[4px_0_32px_-12px_rgba(15,118,110,0.12)] backdrop-blur-xl;
+}
+
+.portal-main {
+  @apply relative;
+}
+
+.portal-card {
+  @apply rounded-2xl border border-slate-200/80 bg-white/90 shadow-sm shadow-slate-200/40 backdrop-blur-sm;
+}
+
+.nav-link {
+  @apply flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 transition-all duration-200;
+}
+
+.nav-link:hover {
+  @apply bg-teal-50/90 text-teal-900;
+}
+
+.nav-link-active {
+  @apply bg-gradient-to-r from-teal-600 to-cyan-600 text-white shadow-md shadow-teal-600/25;
+}
+
+.nav-link-active:hover {
+  @apply text-white brightness-105;
+}
+
+.nav-pill {
+  @apply shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-all duration-200;
+}
+
+.nav-pill-active {
+  @apply bg-gradient-to-r from-teal-600 to-cyan-600 text-white shadow-md shadow-teal-600/20;
+}
+
+.nav-pill-idle {
+  @apply bg-white/90 text-slate-600 ring-1 ring-slate-200/90 hover:bg-teal-50/80 hover:ring-teal-200/60;
 }
 
 @keyframes landing-float {

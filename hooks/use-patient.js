@@ -12,8 +12,12 @@ import {
     getmydoctors,
     getspecialties,
     getspecialtiesById,
+    getPatientMedicalFiles,
+    getPatientReviews,
+    postPatientReview,
     specialitydoctor,
     specialitydoctorbyid,
+    uploadPatientMedicalFile,
 } from "../services/patient";
 
 export function useGetSpecialties() {
@@ -82,6 +86,43 @@ export function useCancelAppointment() {
         mutationFn: (id) => cancelappointment(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["appointments"] });
+        },
+    });
+}
+
+const DEFAULT_PAGE_SIZE = 10;
+
+export function useGetPatientReviews(page = 1, limit = DEFAULT_PAGE_SIZE) {
+    return useQuery({
+        queryKey: ["patient-reviews", page, limit],
+        queryFn: () => getPatientReviews({ page, limit }),
+    });
+}
+
+export function usePostPatientReview() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: postPatientReview,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["patient-reviews"], exact: false });
+            queryClient.invalidateQueries({ queryKey: ["appointments"] });
+        },
+    });
+}
+
+export function useGetPatientMedicalFiles(page = 1, limit = DEFAULT_PAGE_SIZE) {
+    return useQuery({
+        queryKey: ["patient-medical-files", page, limit],
+        queryFn: () => getPatientMedicalFiles({ page, limit }),
+    });
+}
+
+export function useUploadPatientMedicalFile() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: uploadPatientMedicalFile,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["patient-medical-files"], exact: false });
         },
     });
 }

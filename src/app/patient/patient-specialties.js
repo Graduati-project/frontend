@@ -12,7 +12,7 @@ import {
   parseSpecialtiesResponse,
   parseSpecialtyOverviewDetail,
 } from "./patient-parsers";
-import { ScheduleTable } from "./patient-schedule";
+import { ScheduleVisual } from "./patient-schedule";
 
 function SectionState({ isLoading, error, children }) {
   if (isLoading) {
@@ -46,9 +46,9 @@ export function SpecialtyCard({ specialty }) {
       </div>
       <div className="px-5 py-4">
         <p className="mb-3 text-xs font-medium uppercase tracking-wide text-slate-400">
-          Working hours
+          Weekly hours
         </p>
-        <ScheduleTable schedule={specialty.schedule} />
+        <ScheduleVisual schedule={specialty.schedule} />
       </div>
     </article>
   );
@@ -72,9 +72,9 @@ function SpecialtyAvailabilityPanel({ specialty }) {
       </div>
       <div className="px-5 py-4">
         <p className="mb-3 text-xs font-medium uppercase tracking-wide text-slate-400">
-          Days & hours
+          Weekly hours
         </p>
-        <ScheduleTable schedule={specialty.schedule} />
+        <ScheduleVisual schedule={specialty.schedule} />
       </div>
     </div>
   );

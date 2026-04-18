@@ -2,12 +2,22 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import {
+  Calendar,
+  FolderOpen,
+  Star,
+  Stethoscope,
+  User,
+  Users,
+} from "lucide-react";
 
 export const PATIENT_SECTIONS = [
-  { id: "profile", label: "Profile" },
-  { id: "specialties", label: "Specialties" },
-  { id: "appointments", label: "Appointments" },
-  { id: "doctors", label: "My doctors" },
+  { id: "profile", label: "Profile", icon: User },
+  { id: "specialties", label: "Specialties", icon: Stethoscope },
+  { id: "appointments", label: "Appointments", icon: Calendar },
+  { id: "reviews", label: "Reviews", icon: Star },
+  { id: "records", label: "Health records", icon: FolderOpen },
+  { id: "doctors", label: "My doctors", icon: Users },
 ];
 
 export function PatientSidebarNav() {
@@ -20,16 +30,18 @@ export function PatientSidebarNav() {
         const active = current === item.id;
         const href =
           item.id === "profile" ? "/patient" : `/patient?section=${item.id}`;
+        const Icon = item.icon;
         return (
           <Link
             key={item.id}
             href={href}
-            className={`flex w-full items-center rounded-xl px-3 py-2.5 transition-colors ${
-              active
-                ? "bg-slate-900 text-slate-50"
-                : "text-slate-600 hover:bg-slate-100"
-            }`}
+            className={`nav-link ${active ? "nav-link-active" : ""}`}
           >
+            <Icon
+              className={`h-4 w-4 shrink-0 ${active ? "opacity-100" : "opacity-70"}`}
+              strokeWidth={2}
+              aria-hidden
+            />
             {item.label}
           </Link>
         );
@@ -52,11 +64,7 @@ export function PatientMobileTabs() {
           <Link
             key={item.id}
             href={href}
-            className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-              active
-                ? "bg-slate-900 text-white"
-                : "bg-white text-slate-600 ring-1 ring-slate-200"
-            }`}
+            className={`nav-pill ${active ? "nav-pill-active" : "nav-pill-idle"}`}
           >
             {item.label}
           </Link>

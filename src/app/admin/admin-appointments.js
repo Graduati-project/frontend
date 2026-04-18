@@ -1,7 +1,10 @@
-"use client";
+ "use client";
 
 import { useMemo, useState } from "react";
-import { useGetStaffAppointments } from "../../../hooks/use-staff";
+import {
+  useGetStaffAppointments,
+  useGetStaffPressureReports,
+} from "../../../hooks/use-staff";
 import {
   getUserDisplayName,
   parseAdminAppointmentsResponse,
@@ -77,8 +80,11 @@ function AppointmentRow({ appointment }) {
 
 export function AdminAppointmentsSection() {
   const query = useGetStaffAppointments();
+  const reportsQuery = useGetStaffPressureReports();
   const { appointments } = parseAdminAppointmentsResponse(query.data);
   const [search, setSearch] = useState("");
+  const topSpecialties = reportsQuery.data?.data?.topSpecialties ?? [];
+  const topDoctors = reportsQuery.data?.data?.topDoctors ?? [];
 
   const searchedAppointments = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -115,13 +121,69 @@ export function AdminAppointmentsSection() {
   }, [appointments, search]);
 
   return (
-    <SectionState isLoading={query.isLoading} error={query.error}>
-      <div className="space-y-4">
+    <div className="space-y-4">
         <div>
           <h1 className="text-2xl font-semibold text-slate-900">Appointments</h1>
           <p className="mt-1 text-sm text-slate-600">
             All appointments across the system.
           </p>
+        </div>
+
+        <div className="grid gap-3 md:grid-cols-2">
+          <div className="rounded-2xl border border-slate-200 bg-white p-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-slate-900">Top Specialties (by appointments)</h2>
+              <span className="text-xs text-slate-500">live</span>
+            </div>
+            {reportsQuery.isLoading ? (
+              <p className="mt-2 text-xs text-slate-500">Loading…</p>
+            ) : topSpecialties.length === 0 ? (
+              <p className="mt-2 text-xs text-slate-500">No data yet.</p>
+            ) : (
+              <ul className="mt-3 space-y-2 text-sm">
+                {topSpecialties.map((row) => (
+                  <li key={row.specialtyId} className="flex items-center justify-between">
+                    <span className="text-slate-700">{row.specialty?.name ?? "—"}</span>
+                    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-700">
+                      {row.appointmentsCount}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="rounded-2xl border border-slate-200 bg-white p-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-slate-900">Top Doctors (by appointments)</h2>
+              <span className="text-xs text-slate-500">live</span>
+            </div>
+            {reportsQuery.isLoading ? (
+              <p className="mt-2 text-xs text-slate-500">Loading…</p>
+            ) : topDoctors.length === 0 ? (
+              <p className="mt-2 text-xs text-slate-500">No data yet.</p>
+            ) : (
+              <ul className="mt-3 space-y-2 text-sm">
+                {topDoctors.map((row) => (
+                  <li key={row.doctorId} className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate text-slate-700">
+                        {row.doctor?.user
+                          ? getUserDisplayName(row.doctor.user)
+                          : "—"}
+                      </p>
+                      <p className="truncate text-xs text-slate-500">
+                        {row.doctor?.specialty?.name ?? "—"}
+                      </p>
+                    </div>
+                    <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-700">
+                      {row.appointmentsCount}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
 
         <div className="flex flex-wrap items-end justify-between gap-3">
@@ -140,35 +202,36 @@ export function AdminAppointmentsSection() {
           </p>
         </div>
 
-        {searchedAppointments.length === 0 ? (
-          <p className="text-center text-sm text-slate-500">
-            No appointments found.
-          </p>
-        ) : (
-          <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
-            <table className="min-w-[1000px] w-full table-auto text-left text-sm">
-              <thead className="bg-slate-50 text-slate-600">
-                <tr>
-                  <th className="px-4 py-3 font-medium">Date</th>
-                  <th className="px-4 py-3 font-medium">Status</th>
-                  <th className="px-4 py-3 font-medium">Patient</th>
-                  <th className="px-4 py-3 font-medium">Doctor</th>
-                  <th className="px-4 py-3 font-medium">Specialty</th>
-                </tr>
-              </thead>
-              <tbody>
-                {searchedAppointments.map((a) => (
-                  <AppointmentRow
-                    key={a._id ?? JSON.stringify(a)}
-                    appointment={a}
-                  />
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-    </SectionState>
+        <SectionState isLoading={query.isLoading} error={query.error}>
+          {searchedAppointments.length === 0 ? (
+            <p className="text-center text-sm text-slate-500">
+              No appointments found.
+            </p>
+          ) : (
+            <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+              <table className="min-w-[1000px] w-full table-auto text-left text-sm">
+                <thead className="bg-slate-50 text-slate-600">
+                  <tr>
+                    <th className="px-4 py-3 font-medium">Date</th>
+                    <th className="px-4 py-3 font-medium">Status</th>
+                    <th className="px-4 py-3 font-medium">Patient</th>
+                    <th className="px-4 py-3 font-medium">Doctor</th>
+                    <th className="px-4 py-3 font-medium">Specialty</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {searchedAppointments.map((a) => (
+                    <AppointmentRow
+                      key={a._id ?? JSON.stringify(a)}
+                      appointment={a}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </SectionState>
+    </div>
   );
 }
 

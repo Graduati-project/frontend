@@ -62,29 +62,46 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col md:flex-row">
-      {/* Left: Logo side - Full height */}
-      <div className="relative hidden md:block md:w-1/2">
+    <div className="portal-shell flex min-h-screen flex-col md:flex-row">
+      <div className="relative h-44 w-full md:hidden">
         <Image
           src="/logo.jpg"
-          alt="Graduation logo"
+          alt=""
           fill
           className="object-cover"
+          priority
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-teal-950/90 via-teal-900/40 to-transparent" />
+        <p className="absolute bottom-4 left-5 text-lg font-bold text-white drop-shadow">
+          Hospital System
+        </p>
       </div>
 
-      {/* Right: Form side */}
-      <div className="flex min-h-screen w-full items-center justify-center p-4 md:w-1/2 md:p-8">
-        <div className="w-full max-w-md rounded-2xl bg-white/95 p-7 shadow-xl border border-slate-200/70">
-          <p className="mt-1 text-2xl font-semibold text-center text-slate-900">
-            Login to your account
+      <div className="relative hidden min-h-[220px] md:block md:min-h-screen md:w-1/2">
+        <Image
+          src="/logo.jpg"
+          alt="Hospital branding"
+          fill
+          className="object-cover"
+          priority
+        />
+      
+      </div>
+
+      <div className="flex min-h-screen w-full items-center justify-center p-4 md:w-1/2 md:p-10">
+        <div className="w-full max-w-md rounded-3xl border border-white/60 bg-white/90 p-8 shadow-[0_24px_64px_-16px_rgba(15,118,110,0.18)] backdrop-blur-md md:p-9">
+          <p className="text-center text-2xl font-bold tracking-tight text-slate-900">
+            Sign in
+          </p>
+          <p className="mt-2 text-center text-sm text-slate-500">
+            Welcome back — use your hospital account.
           </p>
 
           <form
             onSubmit={handleSubmit}
-            className="mt-7 grid grid-cols-1 gap-5"
+            className="mt-8 grid grid-cols-1 gap-5"
           >
-            <label className="flex flex-col text-xs font-medium text-slate-600">
+            <label className="flex flex-col text-xs font-semibold uppercase tracking-wide text-slate-500">
               Email
               <input
                 type="email"
@@ -92,14 +109,14 @@ export default function LoginPage() {
                 value={formValues.email}
                 onChange={handleChange}
                 required
-                className="mt-2 rounded-xl border border-slate-200 bg-white/70 px-4 py-2.5 text-sm text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
+                autoComplete="email"
+                className="mt-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-normal text-slate-900 shadow-sm transition focus:border-teal-400 focus:outline-none focus:ring-4 focus:ring-teal-500/15"
               />
             </label>
 
-            <label className="flex flex-col text-xs font-medium text-slate-600">
-              <div className="flex items-center justify-between">
+            <label className="flex flex-col text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <div className="flex items-center justify-between normal-case">
                 <span>Password</span>
-            
               </div>
               <div className="relative mt-2">
                 <input
@@ -108,7 +125,8 @@ export default function LoginPage() {
                   value={formValues.password}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-xl border border-slate-200 bg-white/70 px-4 py-2.5 pr-10 text-sm text-slate-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
+                  autoComplete="current-password"
+                  className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 pr-10 text-sm font-normal text-slate-900 shadow-sm transition focus:border-teal-400 focus:outline-none focus:ring-4 focus:ring-teal-500/15"
                 />
                 <button
                   type="button"
@@ -145,9 +163,9 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 transition hover:bg-primary/90 cursor-pointer disabled:cursor-not-allowed disabled:bg-indigo-300"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-teal-600/25 transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isSubmitting ? "Logging in..." : "Login"}
+              {isSubmitting ? "Signing in…" : "Sign in"}
             </button>
           </form>
 

@@ -40,3 +40,24 @@ export async function getStaffSpecialties() {
   const response = await api.get("/staff/specialties", { withAuth: true });
   return response.data;
 }
+
+export async function getStaffPressureReports() {
+  const response = await api.get("/staff/reports/pressure", { withAuth: true });
+  return response.data;
+}
+
+export async function getStaffReviews(params = {}) {
+  const response = await api.get("/staff/reviews", {
+    params,
+    withAuth: true,
+  });
+  return response.data;
+}
+
+export async function getStaffMedicalFiles(params = {}) {
+  const response = await api.get("/staff/medical-files", {
+    params,
+    withAuth: true,
+  });
+  return response.data;
+}
