@@ -10,7 +10,6 @@ import {
 } from "./doctor-parsers";
 
 const STATUS_ACTIONS = [
-  { value: "pending", label: "Pending" },
   { value: "confirmed", label: "Confirm" },
   { value: "cancelled", label: "Cancel" },
   { value: "completed", label: "Complete" },
@@ -64,7 +63,7 @@ function DoctorAppointmentCard({ appointment }) {
           </p>
           <p className="mt-1 text-lg font-semibold text-slate-900">{patientName}</p>
         </div>
-        {appointment.status && (
+        {appointment.status && current !== "pending" && (
           <span
             className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${statusBadgeClass(appointment.status)}`}
           >
