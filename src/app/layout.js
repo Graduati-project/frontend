@@ -16,8 +16,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata = {
-  title: "Hospital Management System",
-  description: "Hospital patient-management system",
+  title: "Hospital Patient Portal",
+  description: "Appointments, hospital services, and patient visit guidance",
   icons: {
     icon: "/logo.jpg",
     shortcut: "/logo.jpg",
