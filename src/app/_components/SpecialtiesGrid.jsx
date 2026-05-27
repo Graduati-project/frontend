@@ -59,8 +59,8 @@ function SpecialtyIcon() {
 
 export default function SpecialtiesGrid() {
   return (
-    <section className="mt-14">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <section className="mt-14 scroll-fade">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between scroll-fade">
         <div className="max-w-2xl">
           <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
             Departments & specialties
@@ -81,7 +81,7 @@ export default function SpecialtiesGrid() {
         {SPECIALTIES.map((s) => (
           <div
             key={s.title}
-            className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200"
+            className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 scroll-fade"
           >
             <div className="flex items-start justify-between gap-4">
               <SpecialtyIcon />

@@ -19,8 +19,8 @@ const FAQS = [
 
 export default function Faq() {
   return (
-    <section className="mt-14">
-      <div className="max-w-2xl">
+    <section className="mt-14 scroll-fade">
+      <div className="max-w-2xl scroll-fade">
         <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
           Frequently asked questions
         </h2>
@@ -33,7 +33,7 @@ export default function Faq() {
         {FAQS.map((item) => (
           <details
             key={item.q}
-            className="group rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200 open:ring-primary/25"
+            className="group rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200 open:ring-primary/25 scroll-fade"
           >
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
               <span className="text-sm font-semibold text-slate-900">

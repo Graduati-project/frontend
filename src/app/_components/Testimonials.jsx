@@ -23,8 +23,8 @@ const TESTIMONIALS = [
 
 export default function Testimonials() {
   return (
-    <section className="mt-14">
-      <div className="max-w-2xl">
+    <section className="mt-14 scroll-fade">
+      <div className="max-w-2xl scroll-fade">
         <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
           What patients say
         </h2>
@@ -37,7 +37,7 @@ export default function Testimonials() {
         {TESTIMONIALS.map((t) => (
           <div
             key={t.name}
-            className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200"
+            className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 scroll-fade"
           >
             <div className="flex items-center gap-3">
               <div className="relative h-12 w-12 overflow-hidden rounded-2xl bg-slate-100 ring-1 ring-slate-200">

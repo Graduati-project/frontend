@@ -59,8 +59,8 @@ export default function InstructionsCarousel({ cards = DEFAULT_CARDS }) {
   }, [count, isPaused]);
 
   return (
-    <section className="mt-14">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <section className="mt-14 scroll-fade">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between scroll-fade">
         <div className="max-w-2xl">
           <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
             Medical instructions for patients
@@ -97,7 +97,7 @@ export default function InstructionsCarousel({ cards = DEFAULT_CARDS }) {
           role="group"
           aria-roledescription="carousel"
           aria-label="Patient instructions carousel"
-          className="relative overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-200"
+          className="relative overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-200 scroll-fade"
           tabIndex={0}
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
@@ -174,7 +174,7 @@ export default function InstructionsCarousel({ cards = DEFAULT_CARDS }) {
                 type="button"
                 onClick={() => goTo(realIdx)}
                 className={[
-                  "text-left rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200 transition",
+                  "text-left rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200 transition scroll-fade",
                   isActive
                     ? "ring-primary/30 bg-linear-to-br from-primary/10 to-white"
                     : "hover:bg-slate-50",
@@ -205,7 +205,7 @@ export default function InstructionsCarousel({ cards = DEFAULT_CARDS }) {
               </button>
             );
           })}
-          <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+          <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200 scroll-fade">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
               Emergency
             </p>

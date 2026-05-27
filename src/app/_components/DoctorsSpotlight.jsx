@@ -210,32 +210,46 @@ export default function DoctorsSpotlight({ doctors = [] }) {
   }
 
   return (
-    <section className="mt-14">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <section className="mt-14 scroll-fade">
+      <div className="flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white/80 p-5 shadow-sm backdrop-blur sm:flex-row sm:items-end sm:justify-between sm:p-6 scroll-fade">
         <div className="max-w-2xl">
-          <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
-            Doctors spotlight
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+            Medical team
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+            Meet our doctors
           </h2>
           <p className="mt-2 text-sm text-slate-600">
-            A quick look at available doctors—browse and book from the portal.
+            Explore specialists, preview their schedule, and open full details in
+            one click.
           </p>
         </div>
-      
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary ring-1 ring-primary/20">
+            {count || 0} doctors
+          </span>
+          <Link
+            href="/patient?section=doctors"
+            className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+          >
+            View all
+          </Link>
+        </div>
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+      <div className="mt-6 grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
         <div
-          className="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-200"
+          className="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-200 scroll-fade"
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
         >
-          <div className="relative aspect-video bg-slate-100">
+          <div className="relative aspect-16/8 bg-slate-100">
             {active?.image ? (
               <Image
                 src={active.image}
                 alt={active.name || "Doctor"}
                 fill
-                className="object-contain"
+                className="object-cover object-top"
                 sizes="(min-width: 1024px) 720px, 100vw"
                 priority={false}
               />
@@ -265,17 +279,21 @@ export default function DoctorsSpotlight({ doctors = [] }) {
               </div>
             ) : (
               <div key={idx} className="hero-fade-up">
-            <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                <p className="text-xs font-semibold uppercase tracking-wide text-primary">
                   {active.specialty}
                 </p>
                 <h3 className="mt-2 text-xl font-semibold text-slate-900">
                   {active.name}
                 </h3>
-                <div className="mt-4 flex flex-wrap gap-3">
+                <p className="mt-2 text-sm text-slate-600">
+                  View profile details, weekly schedule, and contact info, then
+                  continue booking from the patient portal.
+                </p>
+                <div className="mt-5 flex flex-wrap gap-3">
                   <button
                     type="button"
                     onClick={() => openDoctor(active)}
-                  className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
+                    className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
                   >
                     View details
                   </button>
@@ -308,13 +326,13 @@ export default function DoctorsSpotlight({ doctors = [] }) {
                 onClick={() => setIdx(i)}
                 aria-current={activeCard ? "true" : undefined}
                 className={[
-                  "flex items-center gap-3 rounded-3xl bg-white p-4 text-left shadow-sm ring-1 ring-slate-200 transition",
+                  "flex items-center gap-3 rounded-2xl bg-white p-3.5 text-left shadow-sm ring-1 ring-slate-200 transition scroll-fade",
                   activeCard
                     ? "ring-primary/30 bg-linear-to-br from-primary/10 to-white"
                     : "hover:bg-slate-50",
                 ].join(" ")}
               >
-                <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl bg-slate-100 ring-1 ring-slate-200">
+                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-slate-100 ring-1 ring-slate-200">
                   {d.image ? (
                     <Image
                       src={d.image}
@@ -326,13 +344,16 @@ export default function DoctorsSpotlight({ doctors = [] }) {
                   ) : null}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
                     {d.specialty}
                   </p>
                   <p className="mt-1 truncate text-sm font-semibold text-slate-900">
                     {d.name}
                   </p>
                 </div>
+                <span className="ml-auto text-xs font-semibold text-slate-400">
+                  #{i + 1}
+                </span>
               </button>
             );
           })}
